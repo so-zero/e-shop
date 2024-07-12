@@ -4,10 +4,43 @@ import React, { useState } from "react";
 import Link from "next/link";
 import SearchBar from "./custom ui/SearchBar";
 import { LuUser2, LuShoppingCart, LuAlignJustify } from "react-icons/lu";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
+  const { data: session } = useSession();
   const [showProfile, setShowProfile] = useState<boolean>(false);
   const [showNav, setShowNav] = useState<boolean>(false);
+
+  const SignOut = () => {
+    if (session && session.user) {
+      return (
+        <ul className="py-5 px-1 text-neutral-600">
+          <li className="hover:bg-gray-100 hover:text-neutral-900 px-5 py-2 cursor-pointer transition">
+            {session.user.name}님
+          </li>
+          <li className="whitespace-nowrap hover:bg-gray-100 hover:text-neutral-900 px-5 py-2 cursor-pointer transition">
+            상품추가
+          </li>
+          <li
+            onClick={() => signOut()}
+            className="whitespace-nowrap hover:bg-gray-100 hover:text-neutral-900 px-5 py-2 cursor-pointer transition"
+          >
+            로그아웃
+          </li>
+        </ul>
+      );
+    }
+    return (
+      <ul>
+        <li
+          onClick={() => signIn()}
+          className="whitespace-nowrap hover:bg-gray-100 hover:text-neutral-900 px-5 py-2 cursor-pointer transition"
+        >
+          로그인
+        </li>
+      </ul>
+    );
+  };
 
   return (
     <div>
@@ -43,9 +76,14 @@ const Navbar = () => {
             onClick={() => setShowProfile(!showProfile)}
             className="relative cursor-pointer bg-gray-100 p-2 rounded-full"
           >
-            <Link href="/login">
-              <LuUser2 size={20} />
-            </Link>
+            <LuUser2 size={20} />
+            <div
+              className={`absolute right-0 bg-white z-10 rounded-md shadow-md ${
+                showProfile ? "" : "hidden"
+              }`}
+            >
+              <SignOut />
+            </div>
           </div>
           <div
             onClick={() => setShowNav(!showNav)}
