@@ -15,7 +15,25 @@ datasource db {
 
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-   name String?
+  name String?
   email String? @unique
   password String?
+  product Product[]
+}
+
+model Product {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String @db.String
+  category String
+  size String
+  color String
+  price Int
+  brand String
+  style String
+  inventory Int
+  images String @db.String
+  userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
 }
