@@ -19,7 +19,7 @@ const Navbar = () => {
             {session.user.name}님
           </li>
           <li className="whitespace-nowrap hover:bg-gray-100 hover:text-neutral-900 px-5 py-2 cursor-pointer transition">
-            상품추가
+            <Link href="addproduct">상품추가</Link>
           </li>
           <li
             onClick={() => signOut()}
