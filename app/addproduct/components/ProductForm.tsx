@@ -8,6 +8,7 @@ import Size from "@/components/custom ui/Size";
 import Color from "@/components/custom ui/Color";
 import TextBox from "@/components/custom ui/TextBox";
 import ImageUpload from "@/components/custom ui/ImageUpload";
+import axios from "axios";
 
 const ProductForm = () => {
   const { data: session } = useSession();
@@ -69,11 +70,6 @@ const ProductForm = () => {
   };
 
   useEffect(() => {
-    console.log(formData.images);
-    console.log(formData);
-  }, [formData]);
-
-  useEffect(() => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       description: Description,
@@ -81,6 +77,18 @@ const ProductForm = () => {
       userId: id,
     }));
   }, [imageUrls]);
+
+  const postData = async () => {
+    handleImageChange();
+    try {
+      const response = await axios.post("/api/addproduct", formData);
+      if (response.status === 200) {
+        return router.push("/");
+      }
+    } catch (error) {
+      console.log("add product error", error);
+    }
+  };
 
   return (
     <div className="px-5 max-w-[1280px] mx-auto mb-10">
@@ -216,6 +224,12 @@ const ProductForm = () => {
           setImageUrls={setImageUrls}
           handleImageChange={handleImageChange}
         />
+        <button
+          onClick={postData}
+          className="text-white mt-10 border-[1px] bg-black rounded-md px-5 p-2"
+        >
+          등록하기
+        </button>
       </div>
     </div>
   );
