@@ -69,8 +69,6 @@ const Color: React.FC<ColorProps> = ({ setFormData, Color }) => {
               style={{
                 width: "40px",
                 height: "40px",
-                border: "solid",
-                borderColor: "black",
                 borderRadius: "100%",
                 backgroundColor: selectedColor,
                 display: "inline-block",
