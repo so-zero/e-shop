@@ -12,7 +12,6 @@ export const POST = async (request: Request) => {
         userId,
       },
     });
-    console.log(existingCartItem);
 
     if (existingCartItem) {
       await prisma.cart.delete({
@@ -29,7 +28,25 @@ export const POST = async (request: Request) => {
     });
     return NextResponse.json(product);
   } catch (error) {
-    console.log(error, "CART_ERROR");
+    console.log(error, "CART_POST_ERROR");
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+};
+
+export const DELETE = async (request: Request) => {
+  try {
+    const body = await request.json();
+    const { productId, userId } = body;
+
+    const deleteCart = await prisma.cart.deleteMany({
+      where: {
+        productId,
+        userId,
+      },
+    });
+    return NextResponse.json(deleteCart);
+  } catch (error) {
+    console.log(error, "CART_DELETE_ERROR");
     return new NextResponse("Internal Error", { status: 500 });
   }
 };
