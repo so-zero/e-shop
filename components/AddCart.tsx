@@ -25,6 +25,7 @@ const AddCart: React.FC<AddCartProps> = ({ productId }) => {
           })
           .then((response) => {
             router.push("/cart");
+            router.refresh();
             console.log(response.data);
           });
       } catch (error) {
