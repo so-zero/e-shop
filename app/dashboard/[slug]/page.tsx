@@ -1,21 +1,34 @@
 import React from "react";
 import prisma from "@/libs/prismadb";
 import Link from "next/link";
+import Image from "next/image";
 import ImageCard from "@/app/dashboard/components/ImageCard";
 import ProductInfo from "../components/ProductInfo";
-import Image from "next/image";
-import { getServerSession } from "next-auth";
+import Review from "@/components/Review";
+import ReviewCard from "../components/ReviewCard";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const productId = params.slug;
-  const session = await getServerSession();
-  const currentUserId = session?.user.id;
   const product = await prisma.product.findUnique({
     where: {
       id: productId,
     },
   });
+  const allReview = await prisma.review.findMany({
+    where: {
+      productId: productId,
+    },
+  });
+  let ratingCount = 0;
+  if (allReview.length > 0) {
+    const totalRating = allReview.reduce((prev, review) => {
+      return prev + review.rating;
+    }, 0);
+    ratingCount = totalRating / allReview.length;
+  }
+
   const urlString = product?.images;
+
   return (
     <div className="max-w-[1280px] mx-auto px-5 py-5">
       <div className="font-semibold text-2xl mb-10">
@@ -24,7 +37,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
       {product && (
         <div className="flex flex-col mx-auto mt-10 md:grid md:grid-cols-2 md:gap-14">
           {urlString && <ImageCard imageUrls={urlString} />}
-          <ProductInfo {...product} />
+          <ProductInfo
+            {...product}
+            rating={ratingCount}
+            comments={allReview.length}
+          />
         </div>
       )}
       <div className="mb-20 mt-20">
@@ -57,7 +74,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             </div>
             <div className="relative flex justify-center md:justify-end items-center">
               <Image
-                src={product.images.split(",").pop()}
+                src={product?.images.split(",").pop()}
                 width={300}
                 height={300}
                 alt={product.title}
@@ -69,6 +86,25 @@ export default async function Page({ params }: { params: { slug: string } }) {
             </div>
           </div>
         )}
+      </div>
+      <div className="mt-20 mb-20">
+        <div className="flex items-center space-x-5 mb-10">
+          <span className="w-[5px] h-[30px] bg-gray-600 rounded-full inline-block"></span>
+          <span className="font-semibold text-xl">
+            {allReview.length}개의 리뷰
+          </span>
+        </div>
+        <div className="flex flex-col gap-3 md:grid md:grid-cols-2">
+          <div>
+            {allReview.map((review, index) => (
+              <div key={review.id} className="mb-5">
+                <h1 className="mb-2 font-medium">리뷰 {index + 1}</h1>
+                <ReviewCard {...review} />
+              </div>
+            ))}
+          </div>
+          <Review productId={product?.id} userId={product?.userId} />
+        </div>
       </div>
     </div>
   );

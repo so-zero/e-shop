@@ -22,6 +22,8 @@ interface ProductInfoProps {
   inventory: number;
   images: string;
   userId: string;
+  rating: number;
+  comments: number;
 }
 
 const ProductInfo: React.FC<ProductInfoProps> = ({
@@ -37,6 +39,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   inventory,
   images,
   userId,
+  rating,
+  comments,
 }) => {
   const colors = color.split(",");
   const sizes = size.split(",");
@@ -62,10 +66,10 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         <h3 className="text-sm text-gray-500">{brand}</h3>
       </div>
       <div className="flex items-center space-x-12 mt-4">
-        <ReactStars value={2} size={20} />
+        <ReactStars value={rating} size={20} />
         <span className="flex items-start space-x-3">
           <BiCommentDetail size={22} />
-          <span className="opacity-70 text-sm">리뷰 : 200</span>
+          <span className="opacity-70 text-sm">{comments}개의 리뷰</span>
         </span>
       </div>
       <h3 className="font-medium mt-8 mb-3 text-[14px]">사이즈</h3>
@@ -101,6 +105,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           ></span>
         </div>
       ))}
+      <h3 className="font-medium mt-8 mb-3 text-[14px]">가격</h3>
+      <h1 className="text-lg font-semibold">{price}원</h1>
       <div className="flex items-center mt-7 space-x-10">
         <AddCart productId={id} />
       </div>
