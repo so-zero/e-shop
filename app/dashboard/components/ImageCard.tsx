@@ -11,7 +11,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ imageUrls }) => {
   const [selectedImage, setSelectedImage] = useState<number>(0);
   const urlArray = imageUrls.split(",");
   return (
-    <div className="flex flex-col gap-3 max-w-[500px]">
+    <div className="flex flex-col items-center gap-3 max-w-[500px]">
       <Image
         src={urlArray[selectedImage]}
         alt="product image"
