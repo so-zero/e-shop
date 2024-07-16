@@ -14,7 +14,9 @@ export const GET = async (request: Request) => {
     const products = await prisma.product.findMany({
       where: {
         OR: [
-          ...categories.map((category) => ({ style: { contains: category } })),
+          ...categories.map((category) => ({
+            category: { contains: category },
+          })),
           ...sizes.map((size) => ({ size: { contains: size } })),
           ...colors.map((color) => ({ color: { contains: color } })),
           { price: { gte: minPrice, lte: maxPrice } },

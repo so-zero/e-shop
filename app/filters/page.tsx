@@ -7,14 +7,14 @@ import Filter from "./Filter";
 import Link from "next/link";
 import Image from "next/image";
 
-const FilterPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
+const Page = () => {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedSize, setSelectedSize] = useState<string[]>([]);
-  const [colorValues, setColorValues] = useState<string[]>([]);
-  const [selectedColor, setSelectedColor] = useState<string[]>([]);
+  const [allColorValues, setAllColorValues] = useState<string[]>([]);
+  const [selectedColorValues, setSelectedColorValues] = useState<string[]>([]);
   const [price, setPrice] = useState({
     min: 0,
-    max: 1000000,
+    max: 10,
   });
   const [response, setResponse] = useState<any[]>([]);
 
@@ -24,27 +24,29 @@ const FilterPage = () => {
         const response = await axios
           .get("/api/filterproduct", {
             params: {
-              categories: selectedCategory,
+              categories: selectedCategories,
               size: selectedSize,
               price: {
                 min: price.min,
                 max: price.max,
               },
-              colors: selectedColor,
+              colors: selectedColorValues,
             },
             headers: {
               "Content-Type": "application/json",
             },
           })
           .then((response) => {
+            console.log("response", response.data);
             setResponse(response.data);
           });
       } catch (error) {
-        console.log("filter page error", error);
+        console.log("filter error", error);
       }
     };
     fetchData();
-  }, [price, selectedCategory, selectedSize, selectedColor]);
+  }, [selectedCategories, selectedSize, selectedColorValues, price]);
+
   return (
     <div className="px-5 max-w-[1280px] mx-auto">
       <div>
@@ -53,14 +55,14 @@ const FilterPage = () => {
       <div className="flex mt-10 border-t-[0.5px] border-r-[0.5px] sm:overflow-x-auto">
         <div>
           <Filter
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
             selectedSize={selectedSize}
             setSelectedSize={setSelectedSize}
-            colorValues={colorValues}
-            setColorValues={setColorValues}
-            selectedColor={selectedColor}
-            setSelectedColor={setSelectedColor}
+            allColorValues={allColorValues}
+            setAllColorValues={setAllColorValues}
+            selectedColorValues={selectedColorValues}
+            setSelectedColorValues={setSelectedColorValues}
             price={price}
             setPrice={setPrice}
           />
@@ -70,11 +72,11 @@ const FilterPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14 mt-5">
             {response.map((product: any) => (
               <div key={product.id}>
-                <Link href={`dashboard/${product.id}`}>
+                <Link href={`/dashboard/${product.id}`}>
                   <div className="relative rounded-md">
                     <Image
-                      src={product.images.split(",")[0]}
-                      alt={product.title}
+                      src={product?.images.split(",")[0]}
+                      alt={product?.title}
                       width={250}
                       height={300}
                       className="w-[250px] h-[300px] object-cover object-top rounded-md"
@@ -101,4 +103,4 @@ const FilterPage = () => {
   );
 };
 
-export default FilterPage;
+export default Page;

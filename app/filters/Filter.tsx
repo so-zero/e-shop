@@ -5,27 +5,27 @@ import axios from "axios";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 
 interface FilterProps {
-  selectedCategory: string[];
-  setSelectedCategory: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedCategories: string[];
+  setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
   selectedSize: string[];
   setSelectedSize: React.Dispatch<React.SetStateAction<string[]>>;
-  colorValues: string[];
-  setColorValues: React.Dispatch<React.SetStateAction<string[]>>;
-  selectedColor: string[];
-  setSelectedColor: React.Dispatch<React.SetStateAction<string[]>>;
+  allColorValues: string[];
+  setAllColorValues: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedColorValues: string[];
+  setSelectedColorValues: React.Dispatch<React.SetStateAction<string[]>>;
   price: { min: number; max: number };
   setPrice: React.Dispatch<React.SetStateAction<{ min: number; max: number }>>;
 }
 
 const Filter: React.FC<FilterProps> = ({
-  selectedCategory,
-  setSelectedCategory,
+  selectedCategories,
+  setSelectedCategories,
   selectedSize,
   setSelectedSize,
-  colorValues,
-  setColorValues,
-  selectedColor,
-  setSelectedColor,
+  allColorValues,
+  setAllColorValues,
+  selectedColorValues,
+  setSelectedColorValues,
   price,
   setPrice,
 }) => {
@@ -50,10 +50,10 @@ const Filter: React.FC<FilterProps> = ({
   };
 
   const toggleCategory = (category: string) => {
-    setSelectedCategory((prevCategory) =>
-      prevCategory.includes(category)
-        ? prevCategory.filter((c) => c !== category)
-        : [...prevCategory, category]
+    setSelectedCategories((prevCategories) =>
+      prevCategories.includes(category)
+        ? prevCategories.filter((c) => c !== category)
+        : [...prevCategories, category]
     );
   };
 
@@ -66,7 +66,7 @@ const Filter: React.FC<FilterProps> = ({
   };
 
   const toggleColor = (color: string) => {
-    setSelectedColor((prevColor) =>
+    setSelectedColorValues((prevColor) =>
       prevColor.includes(color)
         ? prevColor.filter((c) => c !== color)
         : [...prevColor, color]
@@ -78,53 +78,29 @@ const Filter: React.FC<FilterProps> = ({
       const response = await axios.get("/api/color");
       return response.data;
     } catch (error) {
-      console.log("get colors error", error);
+      console.error("get color error", error);
       return null;
     }
   };
-
-  const allColorValue = colorValues;
 
   useEffect(() => {
     getAllColors().then((allColors) => {
       if (allColors) {
         const colorSet = new Set<string>();
         allColors.forEach((element: any) => {
-          const colors = element.color.split(", ");
+          const colors = element.color.split(",");
           colors.forEach((color: string) => {
             const colorValue = color.replace("#", "");
             colorSet.add(colorValue);
           });
         });
         const uniqueColorValues: string[] = Array.from(colorSet);
-        setColorValues(uniqueColorValues);
+        setAllColorValues(uniqueColorValues);
       }
     });
   }, []);
 
-  useEffect(() => {
-    axios
-      .get("/api/filterproduct", {
-        params: {
-          categories: selectedCategory,
-          size: selectedSize,
-          price: {
-            min: price.min,
-            max: price.max,
-          },
-          colors: selectedColor,
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        console.log("response", response);
-      })
-      .catch((error) => {
-        console.log("filter product error", error);
-      });
-  }, [price.max, price.min, selectedCategory, selectedSize, selectedColor]);
+  const allColorValue = allColorValues;
 
   return (
     <div className="relative">
@@ -139,65 +115,65 @@ const Filter: React.FC<FilterProps> = ({
         <div className="flex flex-col py-3 pb-5 text-sm text-gray-600 border-b-[0.5px]">
           <span
             className={`py-3 px-5 ${
-              selectedCategory.includes("상의") ? "bg-gray-100" : ""
+              selectedCategories.includes("top") ? "bg-gray-100" : ""
             }`}
-            onClick={() => toggleCategory("상의")}
+            onClick={() => toggleCategory("top")}
           >
             상의
           </span>
           <span
             className={`py-3 px-5 ${
-              selectedCategory.includes("아우터") ? "bg-gray-100" : ""
+              selectedCategories.includes("outer") ? "bg-gray-100" : ""
             }`}
-            onClick={() => toggleCategory("아우터")}
+            onClick={() => toggleCategory("outer")}
           >
             아우터
           </span>
           <span
             className={`py-3 px-5 ${
-              selectedCategory.includes("바지") ? "bg-gray-100" : ""
+              selectedCategories.includes("pant") ? "bg-gray-100" : ""
             }`}
-            onClick={() => toggleCategory("바지")}
+            onClick={() => toggleCategory("pant")}
           >
             바지
           </span>
           <span
             className={`py-3 px-5 ${
-              selectedCategory.includes("원피스/스커트") ? "bg-gray-100" : ""
+              selectedCategories.includes("dress&skirt") ? "bg-gray-100" : ""
             }`}
-            onClick={() => toggleCategory("원피스/스커트")}
+            onClick={() => toggleCategory("dress&skirt")}
           >
             원피스/스커트
           </span>
           <span
             className={`py-3 px-5 ${
-              selectedCategory.includes("신발") ? "bg-gray-100" : ""
+              selectedCategories.includes("shoes") ? "bg-gray-100" : ""
             }`}
-            onClick={() => toggleCategory("신발")}
+            onClick={() => toggleCategory("shoes")}
           >
             신발
           </span>
           <span
             className={`py-3 px-5 ${
-              selectedCategory.includes("가방") ? "bg-gray-100" : ""
+              selectedCategories.includes("bag") ? "bg-gray-100" : ""
             }`}
-            onClick={() => toggleCategory("가방")}
+            onClick={() => toggleCategory("bag")}
           >
             가방
           </span>
           <span
             className={`py-3 px-5 ${
-              selectedCategory.includes("뷰티") ? "bg-gray-100" : ""
+              selectedCategories.includes("beauty") ? "bg-gray-100" : ""
             }`}
-            onClick={() => toggleCategory("뷰티")}
+            onClick={() => toggleCategory("beauty")}
           >
             뷰티
           </span>
           <span
             className={`py-3 px-5 ${
-              selectedCategory.includes("라이프") ? "bg-gray-100" : ""
+              selectedCategories.includes("life") ? "bg-gray-100" : ""
             }`}
-            onClick={() => toggleCategory("라이프")}
+            onClick={() => toggleCategory("life")}
           >
             라이프
           </span>
@@ -250,7 +226,7 @@ const Filter: React.FC<FilterProps> = ({
               <li
                 key={index}
                 className={`w-[40px] h-[40px] rounded-xl border-[0.5px] border-gray-300 cursor-pointer ${
-                  selectedColor.includes(`#${color}`) ? "opacity-25" : ""
+                  selectedColorValues.includes(`#${color}`) ? "opacity-25" : ""
                 }`}
                 style={{ backgroundColor: `#${color}` }}
                 onClick={() => toggleColor(`#${color}`)}
