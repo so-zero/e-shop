@@ -114,7 +114,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         <Benefits />
       </div>
       {currentUserId === userId && (
-        <Link href={`/edit/${id}`}>
+        <Link href={`/editproduct/${id}`}>
           <span className="absolute top-0 right-0 p-2 text-gray-600 cursor-pointer">
             <AiOutlineEdit size={24} />
           </span>
