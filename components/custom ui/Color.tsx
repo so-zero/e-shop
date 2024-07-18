@@ -10,7 +10,7 @@ interface ColorProps {
 const Color: React.FC<ColorProps> = ({ setFormData, Color }) => {
   const [color, setColor] = useState("#fff");
   const [open, setOpen] = useState<boolean>(false);
-  const colorArray: string[] = color.split(", ");
+  const colorArray: string[] = Color.split(", ");
   const [selected, setSelected] = useState<string[]>(colorArray);
 
   if (colorArray.length < 0) {
