@@ -32,7 +32,7 @@ const AddCart: React.FC<AddCartProps> = ({ productId }) => {
         console.log("cart error", error);
       }
     } else {
-      router.push("/sing-in");
+      router.push("/sign-in");
     }
   };
 
